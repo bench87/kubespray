@@ -355,3 +355,14 @@
   when:
     - peer_with_router|default(false)
     - inventory_hostname in groups['k8s-cluster']
+
+- name: Copy bandwidth
+  copy:
+    src: bandwidth
+    dest: /opt/cni/bin/bandwidth
+    follow: no
+
+- name: +x bandwidth
+  command: >-
+    chmod +x /opt/cni/bin/bandwidth
+  ignore_errors: no
