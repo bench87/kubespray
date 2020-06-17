@@ -1,0 +1,15 @@
+---
+- name: groupmod 1002 docker
+  command: >-
+    groupmod -g 1002 docker
+  ignore_errors: yes
+
+- name: Write docker daemon.json
+  template:
+    src: "daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+
+- name: restart docker
+  command: >-
+      systemctl restart docker
+  ignore_errors: no

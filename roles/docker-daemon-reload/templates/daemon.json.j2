@@ -1,0 +1,16 @@
+{
+  "data-root": "{{ docker_data_path }}",
+  "log-driver": "json-file",
+  "max-concurrent-uploads": 2,
+  "max-concurrent-downloads": 1,
+  "live-restore": true,
+  "log-opts": {
+    "mode": "non-blocking",
+    "max-buffer-size": "4m",
+    "max-size": "500m",
+    "max-file": "3"
+  },
+  "bip": "{{ bip }}",
+  "metrics-addr" : "127.0.0.1:9323",
+  "experimental" : true
+}

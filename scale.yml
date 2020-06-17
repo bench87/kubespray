@@ -62,6 +62,7 @@
     - { role: etcd, tags: etcd, etcd_cluster_setup: false, when: "not etcd_kubeadm_enabled|default(false)" }
     - { role: kubernetes/node, tags: node }
     - { role: kubernetes/kubeadm, tags: kubeadm }
+    - { role: docker-daemon-reload, tags: docker-daemon }
     - { role: network_plugin, tags: network }
     - { role: kubernetes/node-label, tags: node-label }
   environment: "{{ proxy_env }}"

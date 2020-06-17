@@ -1,0 +1,2 @@
+docker_data_path: "/data0/docker_data"
+bip: "172.16.254.1/24"

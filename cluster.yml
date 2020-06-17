@@ -90,6 +90,7 @@
   roles:
     - { role: kubespray-defaults }
     - { role: kubernetes/kubeadm, tags: kubeadm}
+    - { role: docker-daemon-reload, tags: docker-daemon }
     - { role: network_plugin, tags: network }
     - { role: kubernetes/node-label, tags: node-label }
 
