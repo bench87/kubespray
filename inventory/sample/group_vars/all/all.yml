@@ -1,6 +1,8 @@
 ---
+ansible_user: toss
+ansible_ssh_private_key_file: files/toss.pem
 ## Directory where etcd data stored
-etcd_data_dir: /var/lib/etcd
+etcd_data_dir: /data0/etcd
 
 ## Experimental kubeadm etcd deployment mode. Available only for new deployment
 etcd_kubeadm_enabled: false
@@ -91,7 +93,7 @@ loadbalancer_apiserver_healthcheck_port: 8081
 
 ## Deploy container engine
 # Set false if you want to deploy container engine manually.
-# deploy_container_engine: true
+deploy_container_engine: false
 
 ## Set Pypi repo and cert accordingly
 # pyrepo_index: https://pypi.example.com/simple
