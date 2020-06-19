@@ -61,7 +61,8 @@ kubelet_load_modules: false
 kubelet_max_pods: 110
 
 ## Support parameters to be passed to kubelet via kubelet-config.yaml
-kubelet_config_extra_args: {}
+kubelet_config_extra_args:
+  serverTLSBootstrap: true
 
 ## Support parameters to be passed to kubelet via kubelet-config.yaml only on nodes, not masters
 kubelet_node_config_extra_args: {}

@@ -1,0 +1,30 @@
+all:
+  vars:
+    ansible_ssh_user: tossbank
+    become_user: root
+  hosts:
+    pd-k8sm001-dc1:
+      ansible_host: 10.62.200.121
+      ip: 10.62.200.121
+      access_ip: 10.62.200.121
+    pd-k8ss001-dc1:
+      ansible_host: 10.62.200.124
+      ip: 10.62.200.124
+      access_ip: 10.62.200.124
+  children:
+    kube-master:
+      hosts:
+        pd-k8sm001-dc1:
+    kube-node:
+      hosts:
+        pd-k8ss001-dc1:
+
+    etcd:
+      hosts:
+        k8s-master11-dc1:
+    k8s-cluster:
+      children:
+        kube-master:
+        kube-node:
+    calico-rr:
+      hosts: {}
