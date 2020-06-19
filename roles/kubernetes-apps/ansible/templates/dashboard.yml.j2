@@ -132,17 +132,20 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
   name: kubernetes-dashboard
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: kubernetes-dashboard
+  name: cluster-admin
 subjects:
-  - kind: ServiceAccount
-    name: kubernetes-dashboard
-    namespace: {{ dashboard_namespace }}
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: {{ dashboard_namespace }}
 
 ---
+
 # ------------------- Dashboard Deployment ------------------- #
 
 kind: Deployment
@@ -176,25 +179,12 @@ spec:
               cpu: {{ dashboard_cpu_requests }}
               memory: {{ dashboard_memory_requests }}
           ports:
-            - containerPort: 8443
+            - containerPort: 9090
               protocol: TCP
           args:
             - --namespace={{ dashboard_namespace }}
-{% if dashboard_use_custom_certs %}
-            - --tls-key-file={{ dashboard_tls_key_file }}
-            - --tls-cert-file={{ dashboard_tls_cert_file }}
-{% else %}
-            - --auto-generate-certificates
-{% endif %}
-{% if dashboard_skip_login %}
             - --enable-skip-login
-{% endif %}
-            - --authentication-mode=token{% if kube_basic_auth|default(false) %},basic{% endif %}
-            # Uncomment the following line to manually specify Kubernetes API server Host
-            # If not specified, Dashboard will attempt to auto discover the API server and connect
-            # to it. Uncomment only if the default does not work.
-            # - --apiserver-host=http://my-address:port
-            - --token-ttl={{ dashboard_token_ttl }}
+            - insecure-bind-address=0.0.0.0
           volumeMounts:
             - name: kubernetes-dashboard-certs
               mountPath: /certs
@@ -203,9 +193,9 @@ spec:
               name: tmp-volume
           livenessProbe:
             httpGet:
-              scheme: HTTPS
+              scheme: HTTP
               path: /
-              port: 8443
+              port: 9090
             initialDelaySeconds: 30
             timeoutSeconds: 30
       volumes:
@@ -233,8 +223,8 @@ metadata:
   namespace: {{ dashboard_namespace }}
 spec:
   ports:
-    - port: 443
-      targetPort: 8443
+    - port: 80
+      targetPort: 9090
   selector:
     k8s-app: kubernetes-dashboard
 
