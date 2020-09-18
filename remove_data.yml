@@ -1,0 +1,5 @@
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: shutdown
+      command: rm -rf /data0/kubelet
