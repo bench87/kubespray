@@ -86,7 +86,7 @@ kube_controller_terminated_pod_gc_threshold: 12500
 kube_apiserver_request_timeout: "1m0s"
 
 # 1.10+ admission plugins
-kube_apiserver_enable_admission_plugins: []
+kube_apiserver_enable_admission_plugins: ["NodeRestriction", "PodTolerationRestriction", "PodNodeSelector"]
 
 # 1.10+ list of disabled admission plugins
 kube_apiserver_disable_admission_plugins: []
