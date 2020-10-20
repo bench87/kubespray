@@ -1,0 +1,99 @@
+---
+- name: whoami
+  shell: whoami
+  become: yes
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: pwd
+  shell: pwd
+  become: yes
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs apiserver
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha certs renew apiserver --config /etc/kubernetes/kubeadm-config.yaml
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs apiserver-kubelet-client
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha certs renew apiserver-kubelet-client --config /etc/kubernetes/kubeadm-config.yaml
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs front-proxy-client
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha certs renew front-proxy-client --config /etc/kubernetes/kubeadm-config.yaml
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs admin.conf
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha kubeconfig user --org system:masters --client-name kubernetes-admin > /etc/kubernetes/admin.conf
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs admin.conf
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha kubeconfig user --client-name system:kube-controller-manager > /etc/kubernetes/controller-manager.conf
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew certs admin.conf
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha kubeconfig user --client-name system:kube-scheduler > /etc/kubernetes/scheduler.conf
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: restart manifest server
+  become: yes
+  shell: pkill -9 -f kube-apiserver
+  ignore_errors: yes 
+
+- name: restart manifest server
+  become: yes
+  shell: pkill -9 -f kube-controller-manager
+  ignore_errors: yes 
+
+- name: restart manifest server
+  become: yes
+  shell: pkill -9 -f kube-scheduler
+  ignore_errors: yes 
+
+- name: stop kubelet
+  become: yes
+  shell:  systemctl stop kubelet
+  ignore_errors: yes 
+  args: 
+    chdir: /etc/kubernetes
+
+- name: move pki backup
+  become: yes
+  shell: "mv /var/lib/kubelet/pki{,old} && mkdir /var/lib/kubelet/pki"
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: renew kubelet.conf
+  become: yes
+  shell: /usr/local/bin/kubeadm alpha kubeconfig user --org system:nodes --client-name system:node:$(hostname) > /etc/kubernetes/kubelet.conf
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes
+
+- name: start kubelet
+  become: yes
+  shell:  systemctl start kubelet
+  ignore_errors: no
+  args: 
+    chdir: /etc/kubernetes

@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: "Check ansible version >=2.7.8"
+      assert:
+        msg: "Ansible must be v2.7.8 or higher"
+        that:
+          - ansible_version.string is version("2.7.8", ">=")
+      tags:
+        - check
+  vars:
+    ansible_connection: local
+
+- name: custom-build-kubelet-reload
+  become: yes
+  hosts: "{{ node | default('kube-node') }}"
+  serial: "{{ serial | default('2') }}"
+  gather_facts: no
+  roles:
+    - { role: kubespray-defaults }
+    - { role: drain }
+    - { role: custom-env-kubelet, tags: custom-env  }
+    # - { role: renew-cert, tags: renew-cert }
+    - { role: custom-build-kubelet, tags: custom-build  }
+    - { role: uncordon }
