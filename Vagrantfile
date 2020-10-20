@@ -43,7 +43,7 @@ $num_instances ||= 3
 $instance_name_prefix ||= "k8s"
 $vm_gui ||= false
 $vm_memory ||= 2048
-$vm_cpus ||= 1
+$vm_cpus ||= 2
 $shared_folders ||= {}
 $forwarded_ports ||= {}
 $subnet ||= "172.18.8"
@@ -142,6 +142,7 @@ Vagrant.configure("2") do |config|
         vb.gui = $vm_gui
         vb.linked_clone = true
         vb.customize ["modifyvm", :id, "--vram", "8"] # ubuntu defaults to 256 MB which is a waste of precious RAM
+        vb.customize ["modifyvm", :id, "--audio", "none"]
       end
 
       node.vm.provider :libvirt do |lv|
